@@ -1,0 +1,21 @@
+.newsGrid{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+}
+.newsCard{
+    font-family: 'Cabin', sans-serif;
+    color: black;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 20px;
+}
+.newsCard:hover{
+    box-shadow: 10px 11px 24px -4px rgba(0,0,0,0.75);
+}
+a{
+    text-decoration: none;
+}
