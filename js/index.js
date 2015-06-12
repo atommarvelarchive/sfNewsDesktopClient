@@ -7,6 +7,7 @@ var NewsCard = React.createClass({
         return  (
             <div className="newsCard" onClick={this.props.select.bind(null, this.props.story.url)}>
                 {this.props.story.title}
+                <img src={this.props.story.img} className="storyPic" />
                 {/*<img src={this.props.story.img} className="storyPic" />*/}
             </div>
         );
