@@ -4,6 +4,7 @@ var ipc = require('ipc');
 var request = require('request');
 var news = null;
 var newsURL = "http://localhost:5000/";
+var getStoryText = require('./storyText');
 
 function giveNews(){
     ipc.on('getNews-msg', function(event, arg) {
@@ -12,7 +13,19 @@ function giveNews(){
     });
 }
 
+function giveStory(){
+    ipc.on('getStory-msg', function(event, arg){
+        console.log("story");
+        getStoryText(arg, function(story){
+            console.log("send back");
+            console.log("story: "+story);
+            event.sender.send('getStory-reply', story);
+        });
+    });
+}
+
 getNews();
+giveStory();
 
 // Report crashes to our server.
 require('crash-reporter').start();
