@@ -60,7 +60,7 @@ var UI = React.createClass({
     },
     //RESUME: scrape article content and just display that OR try creating and deleting webviews dynamically OR creating new windows every click
     showStory: function(url) {
-        ipc.send('getStory-msg', url);
+        ipc.send('displayStory-msg', url);
 /*
         this.setState({viewClass: "active"});
         //var wv = document.querySelector("#wv > webview");

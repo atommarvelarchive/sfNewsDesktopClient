@@ -4,7 +4,8 @@ var ipc = require('ipc');
 var request = require('request');
 var news = null;
 var newsURL = "http://localhost:5000/";
-var getStoryText = require('./storyText');
+var cleanSite = require('./cleanSite.js');
+var storyWindows = {};
 
 function giveNews(){
     ipc.on('getNews-msg', function(event, arg) {
@@ -13,23 +14,43 @@ function giveNews(){
     });
 }
 
-function giveStory(){
-    ipc.on('getStory-msg', function(event, arg){
+function displayStory(){
+    ipc.on('displayStory-msg', function(event, arg){
         console.log("story");
-        getStoryText(arg, function(story){
-            console.log("send back");
-            console.log("story: "+story);
-            event.sender.send('getStory-reply', story);
+        var size = mainWindow.getSize();
+        var pos = mainWindow.getPosition();
+        var storyWindow = new BrowserWindow({preload: __dirname+"/clean.js", width: size[0], height: size[1], x:pos[0], y:pos[1], show: true});
+        storyWindow.loadUrl(arg);
+        storyWindow.openDevTools();
+        storyWindows[storyWindow.id] = (storyWindow);
+        storyWindow.on('closed', delWindow.bind(this, storyWindows, storyWindow.id))
+        //cleanSite(storyWindow);
+        storyWindow.webContents.on('did-finish-load', function() {
+            //cleanSite(storyWindow);
+            //setTimeout(showWindow.bind(this,storyWindow), 200);
         });
     });
+}
+
+function delWindow(map, id){
+    map[id] = null;
+    delete map[id];
+}
+
+function showWindow(window){
+    window.show();
 }
 
 //TODO:
 function openStory(){
 }
 
+ipc.on('log', function(event, msg){
+    console.log("[window]: "+msg);
+});
+
 getNews();
-giveStory();
+displayStory();
 
 // Report crashes to our server.
 require('crash-reporter').start();
@@ -66,7 +87,7 @@ function createWindow(){
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
   // Open the devtools.
-  mainWindow.openDevTools();
+  //mainWindow.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
