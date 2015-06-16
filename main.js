@@ -24,6 +24,10 @@ function giveStory(){
     });
 }
 
+//TODO:
+function openStory(){
+}
+
 getNews();
 giveStory();
 

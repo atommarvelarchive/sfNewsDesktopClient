@@ -8,10 +8,18 @@ var request = require('request');
 var cheerio = require('cheerio');
 
 function getDomain(url){
+    var archive = false;
     url = url.replace(/https*:\/\//, "");
+    //if /sf/ then its a diff article view
+    if(url.indexOf("/sanfrancisco/") !== -1){
+        archive = true;
+    }
     url =  url.replace(/\/.*/, "");
     url =  url.replace(/\.com/, "");
     url = url.replace(/www\./, "");
+    if(url === "sfexaminer" && archive){
+        url += "archive";
+    }
     console.log("domain: " + url);
     return url;
 }
@@ -21,10 +29,37 @@ module.exports = function(url, callback){
         if (!error && response.statusCode == 200) {
             switch(getDomain(url)){
                 case "sfweekly":
-                    //sfWeekly(html, callback);
+                    sfWeekly(html, callback);
                     break;
                 case "sfgate":
                     sfGate(html, callback);
+                    break;
+                case "7x7": 
+                    sevenx7(html, callback);
+                    break;
+                case "sfchronicle": 
+                    sfChronicle(html, callback);
+                    break;
+                case "ebar": 
+                    ebar(html, callback);
+                    break;
+                case "ebar": 
+                    ebar(html, callback);
+                    break;
+                case "sfexaminerarchive": 
+                    sfExaminerArchive(html, callback);
+                    break;
+                case "sfexaminer": 
+                    sfExaminer(html, callback);
+                    break;
+                case "bostonherald": 
+                    bostonHerald(html, callback);
+                    break;
+                case "bizjournals": 
+                    bizJournals(html, callback);
+                    break;
+                case "sfist": 
+                    sfist(html, callback);
                     break;
             }
         }
@@ -33,14 +68,16 @@ module.exports = function(url, callback){
 
 function sfWeekly(html, callback){
     var $ = cheerio.load(html);
-    p = $(".postBody").childNodes;
-
-    text = ""
-    for(var i = 0; i< p.length; i++){
-        if(p[i].data){
-            text += p[i].textContent;
+    var p = $(".postBody");
+    var text = "";
+    p.each(function(){
+        var item = $(this);
+        console.log(item.text());
+        if(item.text()){
+            text += item.text();
         }
-    }
+    });
+    callback(text);
 }
 
 function sfGate(html, callback){
@@ -55,45 +92,62 @@ function sfGate(html, callback){
 }
 
 function sevenx7(html, callback){
-    p = $(".pane-node-body p")
-    text = ""
-    for(var i = 0; i< p.length; i++){
-        text += p[i].textContent +"\n"
-    }
+    var $ = cheerio.load(html);
+    var p = $(".pane-node-body p");
+    text = "";
+
+    p.each(function(){
+        text += $(this).text() + "\n";
+    });
+    callback(text);
 }
 
 function sfChronicle(html, callback){
-    var p = $(".article-text > p");
+    var $ = cheerio.load(html);
+    var p = $(".article-text").find("p");
     var text = "";
-    for(var i = 0; i< p.length; i++){
-        text += p[i].textContent
-    }
+    p.each(function(){
+        text += $(this).text();
+    });
+    callback(text);
 }
 
 function ebar(html, callback){
-    var p = $(".article > p");
+    var $ = cheerio.load(html);
+    var p = $(".article").find("p");
     var text = "";
-    for(var i = 0; i< p.length; i++){
-        text += p[i].textContent
-    }
+    p.each(function(){
+        text += $(this).text();
+    });
+    callback(text);
+}
+
+function sfExaminerArchive(html, callback){
+    var $ = cheerio.load(html);
+    callback($("#storyBody").text());
 }
 
 function sfExaminer(html, callback){
-    document.getElementById("storyBody").textContent;
+    var $ = cheerio.load(html);
+    callback($(".story-wrap").text());
 }
 
 function bostonHerald(html, callback){
-    document.querySelectorAll(".field-type-text-with-summary")[0].textContent
+    var $ = cheerio.load(html);
+    callback($(".field-type-text-with-summary").first().text());
 }
 
 function bizJournals(html, callback){
-    p = $(".content__segment")
-    text = ""
-    for(var i = 0; i< p.length; i++){
-        text += p[i].textContent
-    }
+    var $ = cheerio.load(html);
+    var p = $(".content__segment");
+    var text = "";
+    p.each(function(){
+        text += $(this).text();
+    });
+    callback(text);
 }
 
 function sfist(html, callback){
-    $(".entry-body")[0].textContent
+    var $ = cheerio.load(html);
+    callback($(".entry-body").first().text());
 }
