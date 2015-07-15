@@ -21,7 +21,7 @@ function displayStory(){
         var pos = mainWindow.getPosition();
         var storyWindow = new BrowserWindow({preload: __dirname+"/clean.js", width: size[0], height: size[1], x:pos[0], y:pos[1], show: true});
         storyWindow.loadUrl(arg);
-        storyWindow.openDevTools();
+        //storyWindow.openDevTools();
         storyWindows[storyWindow.id] = (storyWindow);
         storyWindow.on('closed', delWindow.bind(this, storyWindows, storyWindow.id))
         //cleanSite(storyWindow);
@@ -41,7 +41,6 @@ function showWindow(window){
     window.show();
 }
 
-//TODO:
 function openStory(){
 }
 
@@ -87,7 +86,7 @@ function createWindow(){
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
   // Open the devtools.
-  //mainWindow.openDevTools();
+  mainWindow.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {

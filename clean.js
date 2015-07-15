@@ -50,7 +50,7 @@ body{ \
     background-color: white; \
 } \
 img{ \
-   max-width: 100%; \
+   max-width: 70%; \
    height: auto; \
 } \
 #pollContainer, #stage-bottom, .Ad, .extras, .ndn_embed{ \

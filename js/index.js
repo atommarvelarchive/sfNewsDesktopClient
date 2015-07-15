@@ -1,6 +1,15 @@
 var ipc = require('ipc');
 var wv = null;
 
+/*
+* TODO:
+*       try moving window to iframe with a webview
+*       navigation ui for webview
+*       main view design ideas
+*       filters/sorting in main view
+*           date-based
+*           category-based
+*/
 
 var NewsCard = React.createClass({
    render: function() {
@@ -9,6 +18,7 @@ var NewsCard = React.createClass({
                 {this.props.story.title}
                 <img src={this.props.story.img} className="storyPic" />
                 {/*<img src={this.props.story.img} className="storyPic" />*/}
+                <p>{this.props.story}</p>
             </div>
         );
     }
@@ -114,7 +124,9 @@ ipc.on('getNews-reply', function(news) {
     var stories = [];
     //render page
     for(source in news){
-        stories = stories.concat(news[source].stories);
+        if(news[source].stories){
+            stories = stories.concat(news[source].stories);
+        }
     }
     React.render(
         <UI stories={stories}  />,
