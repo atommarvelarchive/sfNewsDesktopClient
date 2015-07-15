@@ -6,3 +6,5 @@
 * filters/sorting in main view
  * date-based
  * category-based
+* learn update mechanism
+* learn packaging for osx/windows
