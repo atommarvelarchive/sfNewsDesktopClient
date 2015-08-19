@@ -1,3 +1,7 @@
+# sfNews Desktop Client with Electron
+Wanted to explore Electron so I made a desktop app for sfNews.
+
+
 ## TODO
 
 * try moving window to iframe with a webview
@@ -8,3 +12,4 @@
  * category-based
 * learn update mechanism
 * learn packaging for osx/windows
+* reader mode for articles
